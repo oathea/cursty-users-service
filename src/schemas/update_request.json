@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Sign up request schema",
+    "required": [
+        "firstName",
+        "lastName"
+    ],
+    "properties": {
+      "firstName": {
+        "type": "string",
+        "description": "The user's first name.",
+        "minLength": 1
+      },
+      "lastName": {
+        "type": "string",
+        "description": "The user's last name.",
+        "minLength": 1
+      }
+    }
+  }

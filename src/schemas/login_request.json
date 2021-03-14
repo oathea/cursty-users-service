@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Login request schema",
+    "required": [
+        "email", 
+        "password"
+    ],
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "The user's email.",
+        "format": "email"
+      },
+      "password": {
+        "type": "string",
+        "description": "The user's password.",
+        "minLength": 1
+      }
+    }
+  }

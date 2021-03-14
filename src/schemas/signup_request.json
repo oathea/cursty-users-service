@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Sign up request schema",
+    "required": [
+        "email", 
+        "firstName",
+        "lastName",
+        "password"
+    ],
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "The user's email.",
+        "format": "email"
+      },
+      "firstName": {
+        "type": "string",
+        "description": "The user's first name.",
+        "minLength": 1
+      },
+      "lastName": {
+        "type": "string",
+        "description": "The user's last name.",
+        "minLength": 1
+      },
+      "password": {
+        "type": "string",
+        "description": "The user's password.",
+        "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{10,}$"
+      }
+    }
+  }

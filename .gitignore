@@ -1,0 +1,18 @@
+# Dependency directory
+node_modules
+
+#IDE Stuff
+**/.idea
+
+#OS STUFF
+.DS_Store
+.tmp
+
+#SERVERLESS STUFFrm -rf .git
+admin.env
+.env
+_meta
+.serverless
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
