@@ -1,0 +1,83 @@
+service: curtsy-users-service
+
+custom:
+  region: ${opt:region, self:provider.region}
+  stage: ${opt:stage, self:provider.stage, 'dev'}
+  dynamodbTable: ${self:service}-${self:custom.stage}
+  dynamodbGSI: userEmailIndex
+  authorizerArn: ${ssm:/curtsy/${self:custom.stage}/authorizer-arn}
+  jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret}
+
+provider:
+    name: aws
+    runtime: nodejs12.x
+    region: eu-west-1
+    environment:
+        DYNAMODB_CONTACTS_TABLE: ${self:custom.dynamodbTable}
+        DYNAMODB_GSI_NAME: ${self:custom.dynamodbGSI}
+        JWT_SECRET: ${self:custom.jwtSecret}
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
+
+functions:
+    login:
+        handler: src/handlers/login.handler
+        events:
+            - http:
+                  path: login
+                  method: post
+                  cors: true
+    signup:
+        handler: src/handlers/signup.handler
+        events:
+            - http:
+                  path: signup
+                  authorizer: ${self:custom.authorizerArn}
+                  method: post
+                  cors: true
+    update:
+        handler: src/handlers/update.handler
+        events:
+            - http:
+                  path: /{userId}
+                  authorizer: ${self:custom.authorizerArn}
+                  method: put
+                  cors: true
+    
+resources:
+    Resources:
+        dynamodb:
+            Type: AWS::DynamoDB::Table
+            Properties:
+                TableName: ${self:custom.dynamodbTable}
+                AttributeDefinitions:
+                    - AttributeName: id
+                      AttributeType: S
+                    - AttributeName: email
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: id
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+
+                GlobalSecondaryIndexes:
+                    - IndexName: ${self:custom.dynamodbGSI}
+                      KeySchema:
+                        - AttributeName: email
+                          KeyType: HASH
+                      Projection: 
+                        ProjectionType: ALL
+                      ProvisionedThroughput:
+                        ReadCapacityUnits: 1
+                        WriteCapacityUnits: 1
+                
