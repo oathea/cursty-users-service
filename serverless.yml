@@ -50,6 +50,14 @@ functions:
                   request:
                     schemas:
                       application/json: ${file(src/schemas/signup_request.json)}
+    get:
+        handler: src/handlers/get.handler
+        events:
+            - http:
+                  path: /
+                  authorizer: ${self:custom.authorizerArn}
+                  method: get
+                  cors: true
     update:
         handler: src/handlers/update.handler
         events:

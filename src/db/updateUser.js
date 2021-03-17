@@ -1,4 +1,4 @@
-const { dynamoDb } = require('./index');
+const { dynamodb } = require('./index');
 
 module.exports = async function (id, { firstName, lastName }) {
     const now = new Date().getTime();
@@ -17,6 +17,6 @@ module.exports = async function (id, { firstName, lastName }) {
         },
     };
 
-    await dynamoDb.update(params).promise();
+    await dynamodb.update(params).promise();
     return { id, firstName, lastName, updatedAt: now };
 };

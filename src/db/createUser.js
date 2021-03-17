@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { v1: uuidv1 } = require('uuid');
 
-const { dynamoDb } = require('./index');
+const { dynamodb } = require('./index');
 
 async function createUser({ email, firstName, lastName, password }) {
     const hash = bcrypt.hashSync(password, 9);
@@ -22,7 +22,7 @@ async function createUser({ email, firstName, lastName, password }) {
         Item: user,
     };
 
-    await dynamoDb.put(params).promise();
+    await dynamodb.put(params).promise();
     return user;
 }
 

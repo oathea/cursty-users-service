@@ -1,5 +1,4 @@
 const createError = require('http-errors');
-const contentType = require('content-type');
 const middy = require('@middy/core');
 const jsonBodyParser = require('@middy/http-json-body-parser');
 const jwt = require('jsonwebtoken');

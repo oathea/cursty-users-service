@@ -1,3 +1,3 @@
 const AWS = require('aws-sdk');
 
-module.exports.dynamoDb = new AWS.DynamoDB.DocumentClient();
+module.exports.dynamodb = new AWS.DynamoDB.DocumentClient();

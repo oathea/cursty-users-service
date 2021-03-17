@@ -1,4 +1,4 @@
-const { dynamoDb } = require('./index');
+const { dynamodb } = require('./index');
 
 async function getUserByEmail(email) {
     const params = {
@@ -10,7 +10,7 @@ async function getUserByEmail(email) {
         },
     };
 
-    const { Items } = await dynamoDb.query(params).promise();
+    const { Items } = await dynamodb.query(params).promise();
     return Items[0];
 }
 

@@ -1,12 +1,12 @@
-const updateUser = require('../db/updateUser');
+const getUser = require('../db/getUser');
 const { useMiddleware } = require('../utils/middleware');
 
-async function update(event, context) {
+async function get(event, context) {
     try {
-        const id = event.pathParameters.userId;
+        const id = context.jwtData.data.userID;
 
-        const data = await updateUser(id, event.body);
-        const { firstName, lastName, updatedAt } = data;
+        const data = await getUser(id);
+        const { firstName, lastName, updatedAt, createdAt, email } = data;
 
         return {
             statusCode: 200,
@@ -15,6 +15,8 @@ async function update(event, context) {
                 firstName,
                 lastName,
                 updatedAt,
+                createdAt,
+                email,
             }),
         };
     } catch (err) {
@@ -27,4 +29,4 @@ async function update(event, context) {
     }
 }
 
-exports.handler = useMiddleware(update);
+exports.handler = useMiddleware(get);
