@@ -13,7 +13,7 @@ provider:
     runtime: nodejs12.x
     region: eu-west-1
     environment:
-        DYNAMODB_CONTACTS_TABLE: ${self:custom.dynamodbTable}
+        DYNAMODB_TABLE: ${self:custom.dynamodbTable}
         DYNAMODB_GSI_NAME: ${self:custom.dynamodbGSI}
         JWT_SECRET: ${self:custom.jwtSecret}
     iamRoleStatements:
@@ -25,7 +25,9 @@ provider:
               - dynamodb:Query
               - dynamodb:UpdateItem
               - dynamodb:DeleteItem
-          Resource: arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
+          Resource: 
+              - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
+              - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}/index/*
 
 functions:
     login:
@@ -35,14 +37,19 @@ functions:
                   path: login
                   method: post
                   cors: true
+                  request:
+                    schemas:
+                      application/json: ${file(src/schemas/login_request.json)}
     signup:
         handler: src/handlers/signup.handler
         events:
             - http:
                   path: signup
-                  authorizer: ${self:custom.authorizerArn}
                   method: post
                   cors: true
+                  request:
+                    schemas:
+                      application/json: ${file(src/schemas/signup_request.json)}
     update:
         handler: src/handlers/update.handler
         events:
@@ -51,6 +58,9 @@ functions:
                   authorizer: ${self:custom.authorizerArn}
                   method: put
                   cors: true
+                  request:
+                    schemas:
+                      application/json: ${file(src/schemas/update_request.json)}
     
 resources:
     Resources:

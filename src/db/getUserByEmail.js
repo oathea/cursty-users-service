@@ -14,4 +14,4 @@ async function getUserByEmail(email) {
     return Items[0];
 }
 
-exports.default = getUserByEmail;
+module.exports = getUserByEmail;

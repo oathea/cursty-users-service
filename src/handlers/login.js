@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-const { default: getUserByEmail } = require('../db/getUserByEmail');
+const getUserByEmail = require('../db/getUserByEmail');
 const { makeJwt } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
@@ -9,7 +9,7 @@ async function login(event, context) {
         const { email, password } = event.body;
 
         const user = await getUserByEmail(email);
-        const isValid = await bcrypt.compare(password, user.password);
+        const isValid = user && await bcrypt.compare(password, user.password);
 
         if (!isValid) {
             return {

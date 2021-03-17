@@ -26,4 +26,4 @@ async function createUser({ email, firstName, lastName, password }) {
     return user;
 }
 
-exports.default = createUser;
+module.exports = createUser;
