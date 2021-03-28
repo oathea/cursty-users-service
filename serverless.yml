@@ -1,5 +1,8 @@
 service: curtsy-users-service
 
+plugins:
+  - serverless-domain-manager
+
 custom:
   region: ${opt:region, self:provider.region}
   stage: ${opt:stage, self:provider.stage, 'dev'}
@@ -7,6 +10,12 @@ custom:
   dynamodbGSI: userEmailIndex
   authorizerArn: ${ssm:/curtsy/${self:custom.stage}/authorizer-arn}
   jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret}
+
+  customDomain:
+    domainName: ${ssm:/curtsy/${self:custom.stage}/api-domain}
+    basePath: 'users'
+    stage: ${self:custom.stage}
+    createRoute53Record: true
 
 provider:
     name: aws
@@ -62,7 +71,7 @@ functions:
         handler: src/handlers/update.handler
         events:
             - http:
-                  path: /{userId}
+                  path: /
                   authorizer: ${self:custom.authorizerArn}
                   method: put
                   cors: true
@@ -98,4 +107,5 @@ resources:
                       ProvisionedThroughput:
                         ReadCapacityUnits: 1
                         WriteCapacityUnits: 1
+
                 

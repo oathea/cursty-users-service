@@ -7,10 +7,8 @@ module.exports.useMiddleware = function (handler) {
     return middy(handler).use(jsonBodyParser()).use(decodeJwt());
 };
 
-const decodeJwt = (opts) => ({
+const decodeJwt = () => ({
     before: (handler, next) => {
-        opts = opts || {};
-
         const headers = handler.event.headers;
         if (
             headers &&
