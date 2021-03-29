@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 const getUserByEmail = require('../db/getUserByEmail');
-const { makeJwt } = require('../utils/jwt');
+const { makeJwtFromUser } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
 async function login(event, context) {
@@ -18,7 +18,7 @@ async function login(event, context) {
             };
         }
 
-        const token = makeJwt(user);
+        const token = makeJwtFromUser(user);
         return {
             statusCode: 200,
             body: JSON.stringify({ token }),

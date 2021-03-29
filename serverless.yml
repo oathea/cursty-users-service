@@ -10,6 +10,8 @@ custom:
   dynamodbGSI: userEmailIndex
   authorizerArn: ${ssm:/curtsy/${self:custom.stage}/authorizer-arn}
   jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret}
+  clientUrl: ${ssm:/curtsy/${self:custom.stage}/client-url}
+  senderEmail: ${ssm:/curtsy/${self:custom.stage}/sender-email}
 
   customDomain:
     domainName: ${ssm:/curtsy/${self:custom.stage}/api-domain}
@@ -25,6 +27,9 @@ provider:
         DYNAMODB_TABLE: ${self:custom.dynamodbTable}
         DYNAMODB_GSI_NAME: ${self:custom.dynamodbGSI}
         JWT_SECRET: ${self:custom.jwtSecret}
+        CLIENT_URL: ${self:custom.clientUrl}
+        SENDER_EMAIL: ${self:custom.senderEmail}
+
     iamRoleStatements:
         - Effect: Allow
           Action:
@@ -38,6 +43,11 @@ provider:
               - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
               - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}/index/*
 
+        - Effect: 'Allow'
+          Action:
+            - 'ses:SendEmail'
+          Resource: ['*']
+
 functions:
     login:
         handler: src/handlers/login.handler
@@ -49,6 +59,16 @@ functions:
                   request:
                     schemas:
                       application/json: ${file(src/schemas/login_request.json)}
+    getSignupToken:
+        handler: src/handlers/getSignupToken.handler
+        events:
+            - http:
+                  path: signup-token
+                  method: post
+                  cors: true
+                  request:
+                    schemas:
+                      application/json: ${file(src/schemas/get_signup_token_request.json)}
     signup:
         handler: src/handlers/signup.handler
         events:
