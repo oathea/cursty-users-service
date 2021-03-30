@@ -50,7 +50,7 @@ function makeMessage(email, token) {
                     Charset: 'UTF-8',
                     Data: `
 <p><strong>Signup.</strong></p>
-<a target='_blank' href='${[process.env.CLIENT_URL]}/signup-with-email?signupToken=${token}'>
+<a target='_blank' href='${[process.env.CLIENT_URL]}/onboarding?signupToken=${token}'>
     Click here to sign up
 </a>
 `,
