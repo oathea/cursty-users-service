@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const getUserByEmail = require('../db/getUserByEmail');
+const { conflictResponse, serverErrorResponse, okResponse } = require('../utils/api');
 const { makeJwt } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
@@ -11,28 +12,18 @@ async function getSignupToken(event) {
 
         const existingUser = await getUserByEmail(email);
         if (existingUser) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify('User already exists.'),
-            };
+            return conflictResponse('User already exists.');
         }
 
         const token = makeJwt({ email } , '10d');
         const req = makeMessage(email, token);
 
         await ses.sendEmail(req).promise();
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ }),
-        };
+        return okResponse('Success!');
     } catch (err) {
         console.log({ err });
 
-        return {
-            statusCode: 500,
-            body: JSON.stringify(err.message),
-        };
+        return serverErrorResponse(err.message);
     }
 }
 

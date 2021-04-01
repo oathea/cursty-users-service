@@ -1,4 +1,5 @@
 const updateUser = require('../db/updateUser');
+const { okResponse } = require('../utils/api');
 const { useMiddleware } = require('../utils/middleware');
 
 async function update(event, context) {
@@ -8,22 +9,16 @@ async function update(event, context) {
         const data = await updateUser(id, event.body);
         const { firstName, lastName, updatedAt } = data;
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                id,
-                firstName,
-                lastName,
-                updatedAt,
-            }),
-        };
+        return okResponse({
+            id,
+            firstName,
+            lastName,
+            updatedAt,
+        });
     } catch (err) {
         console.log({ err });
 
-        return {
-            statusCode: 500,
-            body: JSON.stringify(err.message),
-        };
+        return serverErrorResponse(err.message);
     }
 }
 

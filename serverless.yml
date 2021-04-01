@@ -12,6 +12,7 @@ custom:
   jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret}
   clientUrl: ${ssm:/curtsy/${self:custom.stage}/client-url}
   senderEmail: ${ssm:/curtsy/${self:custom.stage}/sender-email}
+  allowOrigin: ${ssm:/curtsy/${self:custom.stage}/allow-origin, '*'}
 
   customDomain:
     domainName: ${ssm:/curtsy/${self:custom.stage}/api-domain}
@@ -29,6 +30,7 @@ provider:
         JWT_SECRET: ${self:custom.jwtSecret}
         CLIENT_URL: ${self:custom.clientUrl}
         SENDER_EMAIL: ${self:custom.senderEmail}
+        ALLOW_ORIGIN: ${self:custom.allowOrigin}
 
     iamRoleStatements:
         - Effect: Allow
