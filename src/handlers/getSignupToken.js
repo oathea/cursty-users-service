@@ -15,7 +15,12 @@ async function getSignupToken(event) {
             return conflictResponse('User already exists.');
         }
 
-        const token = makeJwt({ email } , '10d');
+        const tokenData = {
+            email,
+            isSignup: true,
+        };
+
+        const token = makeJwt(tokenData , '10d');
         const req = makeMessage(email, token);
 
         await ses.sendEmail(req).promise();

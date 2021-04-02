@@ -16,7 +16,12 @@ async function login(event, context) {
             return badRequestResponse('Invalid credentials.');
         }
 
-        const token = makeJwtFromUser(user);
+        const jwtData = {
+            userID: user.id,
+            isSignup: false,
+        };
+
+        const token = makeJwtFromUser(jwtData);
         return okResponse({ token });
     } catch (err) {
         console.log({ err });
