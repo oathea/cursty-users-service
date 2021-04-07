@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const getUserByEmail = require('../db/getUserByEmail');
 const { conflictResponse, serverErrorResponse, okResponse } = require('../utils/api');
-const { makeJwt } = require('../utils/jwt');
+const { makeJwt, permissions } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
 const ses = new AWS.SES();
@@ -17,7 +17,7 @@ async function getSignupToken(event) {
 
         const tokenData = {
             email,
-            isSignup: true,
+            permission: permissions.SIGNUP,
         };
 
         const token = makeJwt(tokenData , '10d');
@@ -31,8 +31,6 @@ async function getSignupToken(event) {
         return serverErrorResponse(err.message);
     }
 }
-
-exports.handler = useMiddleware(getSignupToken);
 
 function makeMessage(email, token) {
     const params = {
@@ -61,3 +59,5 @@ function makeMessage(email, token) {
 
     return params;
 }
+
+exports.handler = useMiddleware(getSignupToken);

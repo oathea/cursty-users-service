@@ -1,5 +1,5 @@
 const createUser = require('../db/createUser');
-const { conflictResponse, okResponse } = require('../utils/api');
+const { conflictResponse, okResponse, serverErrorResponse } = require('../utils/api');
 const { useMiddleware } = require('../utils/middleware');
 
 async function signup(event, context) {

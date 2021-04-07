@@ -1,5 +1,5 @@
 const updateUser = require('../db/updateUser');
-const { okResponse } = require('../utils/api');
+const { okResponse, serverErrorResponse } = require('../utils/api');
 const { useMiddleware } = require('../utils/middleware');
 
 async function update(event, context) {

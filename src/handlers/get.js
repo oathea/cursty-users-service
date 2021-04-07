@@ -1,5 +1,5 @@
 const getUser = require('../db/getUser');
-const { okResponse } = require('../utils/api');
+const { okResponse, serverErrorResponse } = require('../utils/api');
 const { useMiddleware } = require('../utils/middleware');
 
 async function get(event, context) {
