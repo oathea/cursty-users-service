@@ -2,6 +2,7 @@ service: curtsy-users-service
 
 plugins:
   - serverless-domain-manager
+  - serverless-webpack
 
 custom:
   region: ${opt:region, self:provider.region}
@@ -19,6 +20,12 @@ custom:
     basePath: 'users'
     stage: ${self:custom.stage}
     createRoute53Record: true
+
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules:
+      forceExclude:
+        - aws-sdk
 
 provider:
     name: aws
