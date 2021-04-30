@@ -20,7 +20,7 @@ async function getSignupToken(event) {
             permission: permissions.SIGNUP,
         };
 
-        const token = makeJwt(tokenData , '10d');
+        const token = makeJwt(tokenData, '10d');
         const req = makeMessage(email, token);
 
         await ses.sendEmail(req).promise();
@@ -36,7 +36,7 @@ function makeMessage(email, token) {
     const params = {
         Source: process.env.SENDER_EMAIL,
         Destination: {
-            ToAddresses: [ email ],
+            ToAddresses: [email],
         },
         Message: {
             Body: {

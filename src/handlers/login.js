@@ -1,16 +1,16 @@
 const bcrypt = require('bcryptjs');
 
 const getUserByEmail = require('../db/getUserByEmail');
-const { badRequestResponse, okResponse } = require('../utils/api');
+const { badRequestResponse, okResponse, serverErrorResponse } = require('../utils/api');
 const { makeJwtFromUser, permissions } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
-async function login(event, context) {
+async function login(event) {
     try {
         const { email, password } = event.body;
 
         const user = await getUserByEmail(email);
-        const isValid = user && await bcrypt.compare(password, user.password);
+        const isValid = user && (await bcrypt.compare(password, user.password));
 
         if (!isValid) {
             return badRequestResponse('Invalid credentials.');

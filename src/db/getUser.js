@@ -5,7 +5,7 @@ async function getUser(id) {
         TableName: process.env.DYNAMODB_TABLE,
         Key: { id },
     };
-    
+
     const { Item } = await dynamodb.get(params).promise();
     return Item;
 }

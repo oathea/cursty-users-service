@@ -1,5 +1,3 @@
-/* eslint-disable */
-// webpack.config.js
 const path = require('path');
 const slsw = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
@@ -21,5 +19,5 @@ module.exports = {
         path: path.join(__dirname, '.webpack'),
         filename: '[name].js',
     },
-    externals: [nodeExternals()] // exclude external modules
+    externals: [nodeExternals()], // exclude external modules
 };

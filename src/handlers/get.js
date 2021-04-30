@@ -19,7 +19,7 @@ async function get(event, context) {
         });
     } catch (err) {
         console.log({ err });
-        return serverErrorResponse(err.message)
+        return serverErrorResponse(err.message);
     }
 }
 

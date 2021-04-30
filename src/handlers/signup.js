@@ -1,8 +1,9 @@
 const createUser = require('../db/createUser');
+const getUserByEmail = require('../db/getUserByEmail');
 const { conflictResponse, okResponse, serverErrorResponse } = require('../utils/api');
 const { useMiddleware } = require('../utils/middleware');
 
-async function signup(event, context) {
+async function signup(event) {
     try {
         const existingUser = await getUserByEmail(email);
         if (existingUser) {
