@@ -83,6 +83,7 @@ functions:
         events:
             - http:
                   path: signup
+                  authorizer: ${ssm:/curtsy/${self:custom.stage}/signup-authorizer-arn}
                   method: post
                   cors: true
                   request:

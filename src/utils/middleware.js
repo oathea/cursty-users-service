@@ -20,9 +20,7 @@ const decodeJwt = () => ({
                 const token = headers.Authorization.replace('Bearer ', '');
                 handler.context.jwtData = jwt_decode(token);
             } catch (error) {
-                throw new createError.UnprocessableEntity(
-                    'Could not decode JWT.'
-                );
+                throw new createError.UnprocessableEntity('Could not decode JWT.');
             }
         }
 

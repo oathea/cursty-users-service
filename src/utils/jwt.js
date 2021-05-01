@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-exports.makeJwtFromUser = (user) => {
+exports.makeJwtFromUser = user => {
     const data = {
         userID: user.id,
     };

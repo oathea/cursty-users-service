@@ -3,7 +3,7 @@ const { v1: uuidv1 } = require('uuid');
 
 const { dynamodb } = require('./index');
 
-async function createUser({ email, firstName, lastName, password }) {
+async function createUser({ email, firstName, lastName, avatarS3Key, password }) {
     const hash = bcrypt.hashSync(password, 9);
     const now = new Date().getTime();
     const user = {
@@ -11,6 +11,7 @@ async function createUser({ email, firstName, lastName, password }) {
         email: email,
         firstName: firstName,
         lastName: lastName,
+        avatarS3Key: avatarS3Key,
         password: hash,
         createdAt: now,
         updatedAt: now,
