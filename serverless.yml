@@ -4,6 +4,9 @@ plugins:
   - serverless-domain-manager
   - serverless-webpack
 
+package:
+    individually: true
+    
 custom:
   region: ${opt:region, self:provider.region}
   stage: ${opt:stage, self:provider.stage, 'dev'}
