@@ -5,7 +5,7 @@ plugins:
   - serverless-webpack
 
 package:
-    individually: true
+  individually: true
     
 custom:
   region: ${opt:region, self:provider.region}

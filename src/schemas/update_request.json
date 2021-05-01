@@ -7,6 +7,10 @@
         "lastName"
     ],
     "properties": {
+      "avatarS3Key": {
+        "type": "string",
+        "description": "The user's avatar s3Key"
+      },
       "firstName": {
         "type": "string",
         "description": "The user's first name.",
