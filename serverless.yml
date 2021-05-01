@@ -39,6 +39,10 @@ provider:
         SENDER_EMAIL: ${self:custom.senderEmail}
         ALLOW_ORIGIN: ${self:custom.allowOrigin}
 
+    deploymentBucket:
+        name: curtsy-deployments-${self:provider.region}
+        blockPublicAccess: true
+
     iamRoleStatements:
         - Effect: Allow
           Action:
