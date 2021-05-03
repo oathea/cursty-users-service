@@ -1,4 +1,4 @@
-function makeResponse (statusCode, body = {}) {
+function makeResponse(statusCode, body = {}) {
     return {
         statusCode,
         headers: {
@@ -7,28 +7,28 @@ function makeResponse (statusCode, body = {}) {
         },
         body: JSON.stringify(body),
     };
-};
+}
 
-function okResponse (body = {}) {
+function okResponse(body = {}) {
     return makeResponse(200, body);
-};
+}
 
-function serverErrorResponse (message = '') {
+function serverErrorResponse(message = '') {
     return makeResponse(500, message);
-};
+}
 
-function badRequestResponse (message = '') {
+function badRequestResponse(message = '') {
     return makeResponse(400, message);
-};
+}
 
-function conflictResponse (message = '') {
-    return makeResponse(409,  message);
-};
+function conflictResponse(message = '') {
+    return makeResponse(409, message);
+}
 
-module.exports = { 
-    makeResponse, 
-    okResponse, 
-    serverErrorResponse, 
-    badRequestResponse, 
-    conflictResponse 
+module.exports = {
+    makeResponse,
+    okResponse,
+    serverErrorResponse,
+    badRequestResponse,
+    conflictResponse,
 };

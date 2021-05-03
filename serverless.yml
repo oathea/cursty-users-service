@@ -35,112 +35,130 @@ provider:
     runtime: nodejs12.x
     region: eu-west-1
     environment:
-        DYNAMODB_TABLE: ${self:custom.dynamodbTable}
-        DYNAMODB_GSI_NAME: ${self:custom.dynamodbGSI}
-        JWT_SECRET: ${self:custom.jwtSecret}
-        CLIENT_URL: ${self:custom.clientUrl}
-        SENDER_EMAIL: ${self:custom.senderEmail}
-        ALLOW_ORIGIN: ${self:custom.allowOrigin}
+      DYNAMODB_TABLE: ${self:custom.dynamodbTable}
+      DYNAMODB_GSI_NAME: ${self:custom.dynamodbGSI}
+      JWT_SECRET: ${self:custom.jwtSecret}
+      CLIENT_URL: ${self:custom.clientUrl}
+      SENDER_EMAIL: ${self:custom.senderEmail}
+      ALLOW_ORIGIN: ${self:custom.allowOrigin}
 
     deploymentBucket:
-        name: curtsy-deployments-${self:provider.region}
-        blockPublicAccess: true
+      name: curtsy-deployments-${self:provider.region}
+      blockPublicAccess: true
 
     iamRoleStatements:
-        - Effect: Allow
-          Action:
-              - dynamodb:GetItem
-              - dynamodb:PutItem
-              - dynamodb:Scan
-              - dynamodb:Query
-              - dynamodb:UpdateItem
-              - dynamodb:DeleteItem
-          Resource: 
-              - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
-              - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}/index/*
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: 
+          - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}
+          - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.dynamodbTable}/index/*
 
-        - Effect: 'Allow'
-          Action:
-            - 'ses:SendEmail'
-          Resource: ['*']
+      - Effect: 'Allow'
+        Action:
+          - 'ses:SendEmail'
+        Resource: ['*']
 
 functions:
-    login:
-        handler: src/handlers/login.handler
-        events:
-            - http:
-                  path: login
-                  method: post
-                  cors: true
-                  request:
-                    schemas:
-                      application/json: ${file(src/schemas/login_request.json)}
-    getSignupToken:
-        handler: src/handlers/getSignupToken.handler
-        events:
-            - http:
-                  path: signup-token
-                  method: post
-                  cors: true
-                  request:
-                    schemas:
-                      application/json: ${file(src/schemas/get_signup_token_request.json)}
-    signup:
-        handler: src/handlers/signup.handler
-        events:
-            - http:
-                  path: signup
-                  authorizer: ${ssm:/curtsy/${self:custom.stage}/signup-authorizer-arn}
-                  method: post
-                  cors: true
-                  request:
-                    schemas:
-                      application/json: ${file(src/schemas/signup_request.json)}
-    get:
-        handler: src/handlers/get.handler
-        events:
-            - http:
-                  path: /
-                  authorizer: ${self:custom.authorizerArn}
-                  method: get
-                  cors: true
-    update:
-        handler: src/handlers/update.handler
-        events:
-            - http:
-                  path: /
-                  authorizer: ${self:custom.authorizerArn}
-                  method: put
-                  cors: true
-                  request:
-                    schemas:
-                      application/json: ${file(src/schemas/update_request.json)}
+  login:
+    handler: src/handlers/login.handler
+    events:
+      - http:
+          path: login
+          method: post
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/schemas/login_request.json)}
+  getSignupToken:
+      handler: src/handlers/getSignupToken.handler
+      events:
+        - http:
+            path: signup-token
+            method: post
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/get_signup_token_request.json)}
+  signup:
+      handler: src/handlers/signup.handler
+      events:
+        - http:
+            path: signup
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/signup-authorizer-arn}
+            method: post
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/signup_request.json)}
+  get:
+    handler: src/handlers/get.handler
+    events:
+      - http:
+          path: /
+          authorizer: ${self:custom.authorizerArn}
+          method: get
+          cors: true
+  update:
+      handler: src/handlers/update.handler
+      events:
+        - http:
+            path: /
+            authorizer: ${self:custom.authorizerArn}
+            method: put
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/update_request.json)}
     
 resources:
-    Resources:
-        dynamodb:
-            Type: AWS::DynamoDB::Table
-            Properties:
-                TableName: ${self:custom.dynamodbTable}
-                AttributeDefinitions:
-                    - AttributeName: id
-                      AttributeType: S
-                    - AttributeName: email
-                      AttributeType: S
-                KeySchema:
-                    - AttributeName: id
-                      KeyType: HASH
-                ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
+  Resources:
+    dynamodb:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodbTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
-                GlobalSecondaryIndexes:
-                    - IndexName: ${self:custom.dynamodbGSI}
-                      KeySchema:
-                        - AttributeName: email
-                          KeyType: HASH
-                      Projection: 
-                        ProjectionType: ALL
-                      ProvisionedThroughput:
-                        ReadCapacityUnits: 1
-                        WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.dynamodbGSI}
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection: 
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+
+    GatewayResponseDefault5XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'

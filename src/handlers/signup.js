@@ -1,6 +1,7 @@
 const createUser = require('../db/createUser');
 const getUserByEmail = require('../db/getUserByEmail');
 const { conflictResponse, okResponse, serverErrorResponse } = require('../utils/api');
+const { permissions, makeJwt } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
 async function signup(event, context) {
@@ -12,17 +13,13 @@ async function signup(event, context) {
         }
 
         const user = await createUser({ ...event.body, email: signupEmail });
-        const { id, email, firstName, lastName, avatarS3Key, createdAt, updatedAt } = user;
+        const jwtData = {
+            userID: user.id,
+            permission: permissions.USER,
+        };
 
-        return okResponse({
-            id,
-            email,
-            firstName,
-            lastName,
-            avatarS3Key,
-            createdAt,
-            updatedAt,
-        });
+        const token = makeJwt(jwtData);
+        return okResponse({ token });
     } catch (err) {
         console.log({ err });
         return serverErrorResponse(err.message);

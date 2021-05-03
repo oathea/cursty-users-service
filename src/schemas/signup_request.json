@@ -25,7 +25,7 @@
       "password": {
         "type": "string",
         "description": "The user's password.",
-        "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{10,}$"
+        "pattern": "^(?=.*?[a-zA-Z])(?=.*?[0-9]).{10,}$"
       }
     }
   }

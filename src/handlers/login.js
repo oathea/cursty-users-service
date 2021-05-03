@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const getUserByEmail = require('../db/getUserByEmail');
 const { badRequestResponse, okResponse, serverErrorResponse } = require('../utils/api');
-const { makeJwtFromUser, permissions } = require('../utils/jwt');
+const { makeJwt, permissions } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
 async function login(event) {
@@ -18,10 +18,10 @@ async function login(event) {
 
         const jwtData = {
             userID: user.id,
-            permissions: permissions.USER,
+            permission: permissions.USER,
         };
 
-        const token = makeJwtFromUser(jwtData);
+        const token = makeJwt(jwtData);
         return okResponse({ token });
     } catch (err) {
         console.log({ err });
