@@ -10,6 +10,7 @@ package:
 custom:
   region: ${opt:region, self:provider.region}
   stage: ${opt:stage, self:provider.stage, 'dev'}
+  emailQueue: curtsy-${self:custom.stage}-email-queue
   dynamodbTable: ${self:service}-${self:custom.stage}
   dynamodbGSI: userEmailIndex
   authorizerArn: ${ssm:/curtsy/${self:custom.stage}/authorizer-arn}
@@ -41,6 +42,7 @@ provider:
       CLIENT_URL: ${self:custom.clientUrl}
       SENDER_EMAIL: ${self:custom.senderEmail}
       ALLOW_ORIGIN: ${self:custom.allowOrigin}
+      EMAIL_QUEUE_URL: https://sqs.eu-west-1.amazonaws.com/357843269944/${self:custom.emailQueue}
 
     deploymentBucket:
       name: curtsy-deployments-${self:provider.region}
@@ -61,8 +63,10 @@ provider:
 
       - Effect: 'Allow'
         Action:
-          - 'ses:SendEmail'
-        Resource: ['*']
+          - 'sqs:SendMessage'
+          - "sqs:GetQueueUrl"
+        Resource: 
+          - arn:aws:sqs:${self:custom.region}:*:${self:custom.emailQueue}
 
 functions:
   login:

@@ -1,0 +1,3 @@
+exports.emailTypes = {
+    SIGNUP: 'SIGNUP',
+};
