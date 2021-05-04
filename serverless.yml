@@ -30,6 +30,7 @@ custom:
     includeModules:
       forceExclude:
         - aws-sdk
+        - http-errors
 
 provider:
     name: aws
