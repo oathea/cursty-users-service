@@ -10,5 +10,6 @@ exports.makeJwt = (data = {}, expiresIn = '100d') => {
 
 exports.permissions = {
     SIGNUP: 'SIGNUP',
+    RESET_PASSWORD: 'RESET_PASSWORD',
     USER: 'USER',
 };

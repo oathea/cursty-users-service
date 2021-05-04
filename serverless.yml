@@ -119,6 +119,17 @@ functions:
             request:
               schemas:
                 application/json: ${file(src/schemas/update_request.json)}
+  forgotPassword:
+      handler: src/handlers/forgotPassword.handler
+      events:
+        - http:
+            path: /forgot-password
+            authorizer: ${self:custom.authorizerArn}
+            method: post
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/forgot_password_request.json)}
     
 resources:
   Resources:
