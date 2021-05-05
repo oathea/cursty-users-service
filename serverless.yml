@@ -125,7 +125,6 @@ functions:
       events:
         - http:
             path: /forgot-password
-            authorizer: ${self:custom.authorizerArn}
             method: post
             cors: true
             request:

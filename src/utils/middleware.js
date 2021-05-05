@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const middy = require('@middy/core');
 const jsonBodyParser = require('@middy/http-json-body-parser');
 const jwt_decode = require('jwt-decode');
@@ -16,11 +15,11 @@ const decodeJwt = () => ({
             headers.Authorization.includes('Bearer') &&
             headers.Authorization.replace('Bearer ', '')
         ) {
+            const token = headers.Authorization.replace('Bearer ', '');
             try {
-                const token = headers.Authorization.replace('Bearer ', '');
                 handler.context.jwtData = jwt_decode(token);
             } catch (error) {
-                throw new createError.UnprocessableEntity('Could not decode JWT.');
+                console.log('Could not decode JWT. Token :%s', token);
             }
         }
 
