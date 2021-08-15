@@ -15,7 +15,9 @@ const decodeJwt = () => ({
             headers.Authorization.includes('Bearer') &&
             headers.Authorization.replace('Bearer ', '')
         ) {
+            console.log('decoding');
             const token = headers.Authorization.replace('Bearer ', '');
+            console.log({ token });
             try {
                 handler.context.jwtData = jwt_decode(token);
             } catch (error) {

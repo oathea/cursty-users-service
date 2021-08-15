@@ -14,10 +14,11 @@ custom:
   dynamodbTable: ${self:service}-${self:custom.stage}
   dynamodbGSI: userEmailIndex
   authorizerArn: ${ssm:/curtsy/${self:custom.stage}/authorizer-arn}
-  jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret}
+  jwtSecret: ${ssm:/curtsy/${self:custom.stage}/jwt-sercret, 'dummysecret'}
   clientUrl: ${ssm:/curtsy/${self:custom.stage}/client-url}
   senderEmail: ${ssm:/curtsy/${self:custom.stage}/sender-email}
   allowOrigin: ${ssm:/curtsy/${self:custom.stage}/allow-origin, '*'}
+  accountId: ${ssm:/curtsy/account-id}
 
   customDomain:
     domainName: ${ssm:/curtsy/${self:custom.stage}/api-domain}
@@ -72,6 +73,7 @@ provider:
 functions:
   login:
     handler: src/handlers/login.handler
+    description: Logs in a user
     events:
       - http:
           path: login
@@ -80,8 +82,10 @@ functions:
           request:
             schemas:
               application/json: ${file(src/schemas/login_request.json)}
+
   getSignupToken:
       handler: src/handlers/getSignupToken.handler
+      description: Get a token that a user can use to sign up
       events:
         - http:
             path: signup-token
@@ -92,6 +96,7 @@ functions:
                 application/json: ${file(src/schemas/get_signup_token_request.json)}
   signup:
       handler: src/handlers/signup.handler
+      description: Sign up a user
       events:
         - http:
             path: signup
@@ -101,27 +106,32 @@ functions:
             request:
               schemas:
                 application/json: ${file(src/schemas/signup_request.json)}
-  get:
-    handler: src/handlers/get.handler
+  getMe:
+    handler: src/handlers/getMe.handler
+    description: Gets the currently logged in user
     events:
       - http:
-          path: /
-          authorizer: ${self:custom.authorizerArn}
+          path: me
+          authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
           method: get
           cors: true
+
   update:
       handler: src/handlers/update.handler
+      description: Updates the currently logged in user
       events:
         - http:
             path: /
-            authorizer: ${self:custom.authorizerArn}
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
             method: put
             cors: true
             request:
               schemas:
                 application/json: ${file(src/schemas/update_request.json)}
+
   forgotPassword:
       handler: src/handlers/forgotPassword.handler
+      description: Triggers a forgot password email
       events:
         - http:
             path: /forgot-password

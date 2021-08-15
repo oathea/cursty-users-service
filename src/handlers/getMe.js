@@ -4,6 +4,7 @@ const { useMiddleware } = require('../utils/middleware');
 
 async function get(event, context) {
     try {
+        console.log('hihihihihihhiihihh');
         const id = context.jwtData.data.userID;
 
         const data = await getUser(id);
