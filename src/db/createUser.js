@@ -15,6 +15,7 @@ async function createUser({ email, firstName, lastName, avatarS3Key, password })
         password: hash,
         createdAt: now,
         updatedAt: now,
+        teams: {},
     };
 
     const params = {

@@ -44,7 +44,7 @@ provider:
       CLIENT_URL: ${self:custom.clientUrl}
       SENDER_EMAIL: ${self:custom.senderEmail}
       ALLOW_ORIGIN: ${self:custom.allowOrigin}
-      EMAIL_QUEUE_URL: https://sqs.eu-west-1.amazonaws.com/357843269944/${self:custom.emailQueue}
+      EMAIL_QUEUE_URL: https://sqs.eu-west-1.amazonaws.com/${aws:accountId}/${self:custom.emailQueue}
 
     deploymentBucket:
       name: curtsy-deployments-${self:provider.region}
@@ -69,6 +69,14 @@ provider:
           - "sqs:GetQueueUrl"
         Resource: 
           - arn:aws:sqs:${self:custom.region}:*:${self:custom.emailQueue}
+      
+      - Effect: Allow
+        Action:
+          - dynamodb:DescribeStream
+          - dynamodb:GetRecords
+          - dynamodb:GetShardIterator
+          - dynamodb:ListStreams
+        Resource: arn:aws:dynamodb:*:*:table/curtsy-teams-service
 
 functions:
   login:
@@ -140,6 +148,12 @@ functions:
             request:
               schemas:
                 application/json: ${file(src/schemas/forgot_password_request.json)}
+
+  handleUpdatedTeams:
+      handler: src/handlers/handleUpdatedTeams.handler
+      description: Updates users when a team is created.
+      events:
+        - stream: arn:aws:dynamodb:eu-west-1:357843269944:table/curtsy-teams-service-dev/stream/2021-08-15T14:45:39.570
     
 resources:
   Resources:

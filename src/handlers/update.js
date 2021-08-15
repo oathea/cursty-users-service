@@ -16,7 +16,7 @@ async function update(event, context) {
             updatedAt,
         });
     } catch (err) {
-        console.log({ err });
+        console.log('error :%j', err);
 
         return serverErrorResponse(err.message);
     }
