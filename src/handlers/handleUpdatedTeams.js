@@ -15,8 +15,10 @@ async function handleUpdatedTeams(event, context) {
             await handleInsert(record);
         }
         if (record.eventName === 'REMOVE') {
-            console.log('unmarshalled record :%j', unmarshall(record));
             await handleRemove(record);
+        }
+        if (record.eventName === 'MODIFY') {
+            await handleModify(record);
         }
     }
 }
@@ -27,7 +29,7 @@ async function handleInsert(record) {
         const userId = team.createdByUserID;
         await addTeam(userId, team.name, team.id, teamRoles.OWNER);
     } catch (err) {
-        console.log('handleInsert :%j', err);
+        console.log('handleInsert error :%j', err);
     }
 }
 
@@ -38,7 +40,32 @@ async function handleRemove(record) {
             await removeTeam(userDetails.id, team.id);
         }
     } catch (err) {
-        console.log('handleRemove :%j', err);
+        console.log('handleRemove error :%j', err);
+    }
+}
+
+async function handleModify(record) {
+    try {
+        const team = unmarshall(record.dynamodb.NewImage);
+        const prevTeam = unmarshall(record.dynamodb.OldImage);
+
+        const newTeamMembers = Object.values(team.users).filter(
+            member => !prevTeam.users[member.id],
+        );
+
+        for (const userDetails of newTeamMembers) {
+            await addTeam(userDetails.id, team.name, team.id, userDetails.role);
+        }
+
+        const deletedTeamMembers = Object.values(prevTeam.users).filter(
+            member => !team.users[member.id],
+        );
+
+        for (const userDetails of deletedTeamMembers) {
+            await removeTeam(userDetails.id, team.id);
+        }
+    } catch (err) {
+        console.log('handleModify error :%j', err);
     }
 }
 
