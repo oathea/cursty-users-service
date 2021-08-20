@@ -7,7 +7,7 @@ async function get(event, context) {
         const id = context.jwtData.data.userID;
 
         const data = await getUser(id);
-        const { firstName, lastName, updatedAt, createdAt, email, teams } = data;
+        const { avatarS3Key, firstName, lastName, updatedAt, createdAt, email, teams } = data;
 
         return okResponse({
             id,
@@ -17,6 +17,7 @@ async function get(event, context) {
             createdAt,
             email,
             teams,
+            avatarS3Key,
         });
     } catch (err) {
         console.log('error getting user :%j', err);
