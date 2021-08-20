@@ -19,5 +19,5 @@ module.exports = async function (id, { firstName, lastName, avatarS3Key }) {
     };
 
     await dynamodb.update(params).promise();
-    return { id, firstName, lastName, updatedAt: now };
+    return { id, firstName, lastName, avatarS3Key, updatedAt: now };
 };
