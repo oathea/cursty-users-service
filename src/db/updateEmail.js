@@ -30,7 +30,7 @@ async function updateEmail(id, email) {
         throw err;
     }
 
-    return user;
+    return item;
 }
 
 module.exports = updateEmail;
