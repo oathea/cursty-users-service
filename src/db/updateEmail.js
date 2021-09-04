@@ -9,7 +9,6 @@ async function updateEmail(id, email) {
     //eslint-disable-next-line
     const { resetEmailCode, ...user } = await getUser(id);
     const item = { ...user, email, updatedAt: now };
-    console.log({ item });
 
     try {
         await hardDeleteUser(id);

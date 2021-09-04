@@ -8,8 +8,7 @@ async function hardDeleteUser(id) {
         },
     };
 
-    const res = await dynamodb.delete(params).promise();
-    console.log({ res });
+    await dynamodb.delete(params).promise();
 }
 
 module.exports = hardDeleteUser;
