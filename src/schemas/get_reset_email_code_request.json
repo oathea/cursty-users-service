@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Generates a reset email code",
+    "required": [
+        "email"
+    ],
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "The user's email.",
+        "format": "email"
+      }
+    }
+  }

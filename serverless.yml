@@ -114,6 +114,7 @@ functions:
             request:
               schemas:
                 application/json: ${file(src/schemas/signup_request.json)}
+
   getMe:
     handler: src/handlers/getMe.handler
     description: Gets the currently logged in user
@@ -137,6 +138,19 @@ functions:
               schemas:
                 application/json: ${file(src/schemas/update_request.json)}
 
+  resetPassword:
+      handler: src/handlers/resetPassword.handler
+      description: Updates the currently logged in user's password
+      events:
+        - http:
+            path: /reset-password
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
+            method: put
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/reset_password_request.json)}
+
   forgotPassword:
       handler: src/handlers/forgotPassword.handler
       description: Triggers a forgot password email
@@ -148,6 +162,32 @@ functions:
             request:
               schemas:
                 application/json: ${file(src/schemas/forgot_password_request.json)}
+
+  getResetEmailCode:
+      handler: src/handlers/getResetEmailCode.handler
+      description: Triggers a reset email code password
+      events:
+        - http:
+            path: /reset-email-code
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
+            method: post
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/get_reset_email_code_request.json)}
+
+  resetEmail:
+      handler: src/handlers/resetEmail.handler
+      description: Resets a user's email
+      events:
+        - http:
+            path: /reset-email
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
+            method: put
+            cors: true
+            request:
+              schemas:
+                application/json: ${file(src/schemas/reset_email_request.json)}
 
   handleUpdatedTeams:
       handler: src/handlers/handleUpdatedTeams.handler
