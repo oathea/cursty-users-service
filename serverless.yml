@@ -189,6 +189,16 @@ functions:
               schemas:
                 application/json: ${file(src/schemas/reset_email_request.json)}
 
+  selectTeam:
+      handler: src/handlers/selectTeam.handler
+      description: Selects a user's team
+      events:
+        - http:
+            path: /select-team/{teamID}
+            authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
+            method: patch
+            cors: true
+
   handleUpdatedTeams:
       handler: src/handlers/handleUpdatedTeams.handler
       description: Updates users when a team is created.

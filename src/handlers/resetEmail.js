@@ -19,7 +19,8 @@ async function resetEmail(event, context) {
             return badRequestResponse('The provided code has expired.');
         }
 
-        const { email } = await updateEmail(id, resetEmailCode.email);
+        const email = resetEmailCode.email;
+        await updateEmail(id, email);
         return okResponse({ email });
     } catch (err) {
         console.log('error :%j', err);
