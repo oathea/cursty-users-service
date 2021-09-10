@@ -17,8 +17,8 @@ async function selectTeam(event, context) {
         }
 
         const jwtData = {
-            ...context.jwtData,
-            selectTeamID: teamID,
+            ...context.jwtData.data,
+            selectedTeamID: teamID,
         };
 
         const token = makeJwt(jwtData);
