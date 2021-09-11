@@ -1,7 +1,8 @@
 const AWS = require('aws-sdk');
-const addTeam = require('../db/addTeam');
+const putTeam = require('../db/putTeam');
 const removeTeam = require('../db/removeTeam');
 const { teamRoles } = require('../utils/constants');
+const { isDifferent } = require('../utils/generic');
 const { useMiddleware } = require('../utils/middleware');
 
 const unmarshall = AWS.DynamoDB.Converter.unmarshall;
@@ -27,7 +28,7 @@ async function handleInsert(record) {
     try {
         const team = unmarshall(record.dynamodb.NewImage);
         const userId = team.createdByUserID;
-        await addTeam(userId, team.name, team.id, teamRoles.OWNER);
+        await putTeam(userId, team.name, team.id, teamRoles.OWNER);
     } catch (err) {
         console.log('handleInsert error :%j', err);
     }
@@ -49,19 +50,13 @@ async function handleModify(record) {
         const team = unmarshall(record.dynamodb.NewImage);
         const prevTeam = unmarshall(record.dynamodb.OldImage);
 
-        const newTeamMembers = Object.values(team.users).filter(
-            member => !prevTeam.users[member.id],
-        );
-
-        for (const userDetails of newTeamMembers) {
-            await addTeam(userDetails.id, team.name, team.id, userDetails.role);
+        const members = Object.values(team.users);
+        for (const userDetails of members) {
+            await putTeam(userDetails.id, team.name, team.id, userDetails.role);
         }
 
-        const deletedTeamMembers = Object.values(prevTeam.users).filter(
-            member => !team.users[member.id],
-        );
-
-        for (const userDetails of deletedTeamMembers) {
+        const removedMembers = Object.values(prevTeam.users).filter(m => !team.users[m.id]);
+        for (const userDetails of removedMembers) {
             await removeTeam(userDetails.id, team.id);
         }
     } catch (err) {
