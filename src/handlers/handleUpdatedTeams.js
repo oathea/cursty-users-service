@@ -2,7 +2,6 @@ const AWS = require('aws-sdk');
 const putTeam = require('../db/putTeam');
 const removeTeam = require('../db/removeTeam');
 const { teamRoles } = require('../utils/constants');
-const { isDifferent } = require('../utils/generic');
 const { useMiddleware } = require('../utils/middleware');
 
 const unmarshall = AWS.DynamoDB.Converter.unmarshall;
