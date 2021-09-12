@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const { isEqual } = require('lodash');
 const putTeam = require('../db/putTeam');
 const removeTeam = require('../db/removeTeam');
 const { teamRoles } = require('../utils/constants');
@@ -48,6 +49,8 @@ async function handleModify(record) {
     try {
         const team = unmarshall(record.dynamodb.NewImage);
         const prevTeam = unmarshall(record.dynamodb.OldImage);
+
+        if (isEqual(team, prevTeam)) return;
 
         const members = Object.values(team.users);
         for (const userDetails of members) {
