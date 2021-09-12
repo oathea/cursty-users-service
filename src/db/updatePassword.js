@@ -10,7 +10,11 @@ module.exports = async function (id, password) {
         Key: {
             id,
         },
-        UpdateExpression: 'set updatedAt = :updatedAt, password = :hash',
+        UpdateExpression: 'set #updatedAt = :updatedAt, #password = :hash',
+        ExpressionAttributeNames: {
+            '#updatedAt': 'updatedAt',
+            '#password': 'password',
+        },
         ExpressionAttributeValues: {
             ':updatedAt': now,
             ':hash': hash,

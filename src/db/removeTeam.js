@@ -8,8 +8,10 @@ module.exports = async function (id, teamID) {
         Key: {
             id,
         },
-        UpdateExpression: 'SET updatedAt = :updatedAt REMOVE teams.#teamID',
+        UpdateExpression: 'SET #updatedAt = :updatedAt REMOVE #teams.#teamID',
         ExpressionAttributeNames: {
+            '#updatedAt': 'updatedAt',
+            '#teams': 'teams',
             '#teamID': teamID,
         },
         ExpressionAttributeValues: {

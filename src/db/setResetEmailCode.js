@@ -12,7 +12,11 @@ module.exports = async function (id, email) {
         Key: {
             id,
         },
-        UpdateExpression: 'set updatedAt = :updatedAt, resetEmailCode = :resetEmailCode',
+        UpdateExpression: 'set #updatedAt = :updatedAt, #resetEmailCode = :resetEmailCode',
+        ExpressionAttributeNames: {
+            '#updatedAt': 'updatedAt',
+            '#resetEmailCode': 'resetEmailCode',
+        },
         ExpressionAttributeValues: {
             ':updatedAt': now,
             ':resetEmailCode': resetEmailCode,

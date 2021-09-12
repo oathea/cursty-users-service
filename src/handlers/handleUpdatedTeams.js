@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const { isEqual } = require('lodash');
+const { isDifferent } = require('../utils/generic');
 const putTeam = require('../db/putTeam');
 const removeTeam = require('../db/removeTeam');
 const { teamRoles } = require('../utils/constants');
@@ -50,19 +50,31 @@ async function handleModify(record) {
         const team = unmarshall(record.dynamodb.NewImage);
         const prevTeam = unmarshall(record.dynamodb.OldImage);
 
-        if (isEqual(team, prevTeam)) return;
-
         const members = Object.values(team.users);
-        for (const userDetails of members) {
+        const prevMembers = Object.values(prevTeam.users);
+
+        const newMembers = members.filter(m => !prevTeam.users[m.id]);
+        for (const userDetails of newMembers) {
             await putTeam(userDetails.id, team.name, team.id, userDetails.role);
         }
 
-        const removedMembers = Object.values(prevTeam.users).filter(m => !team.users[m.id]);
+        const removedMembers = prevMembers.filter(m => !team.users[m.id]);
         for (const userDetails of removedMembers) {
             await removeTeam(userDetails.id, team.id);
         }
+
+        const existingMembers = members.filter(m => prevTeam.users[m.id]);
+        for (const userDetails of existingMembers) {
+            const prevUserDetails = prevTeam.users[userDetails.id];
+
+            // only update if name/role have changed. Could cause infinite loop if we don't check this.
+            if (isDifferent([team.name, userDetails.role], [prevTeam.name, prevUserDetails.role])) {
+                await putTeam(userDetails.id, team.name, team.id, userDetails.role);
+            }
+        }
     } catch (err) {
         console.log('handleModify error :%j', err);
+        console.log({ err });
     }
 }
 
