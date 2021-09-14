@@ -3,22 +3,16 @@
     "type": "object",
     "title": "Sign up request schema",
     "required": [
-        "firstName",
-        "lastName"
+        "name"
     ],
     "properties": {
       "avatarS3Key": {
         "type": "string",
         "description": "The user's avatar s3Key"
       },
-      "firstName": {
+      "name": {
         "type": "string",
-        "description": "The user's first name.",
-        "minLength": 1
-      },
-      "lastName": {
-        "type": "string",
-        "description": "The user's last name.",
+        "description": "The user's name.",
         "minLength": 1
       }
     }

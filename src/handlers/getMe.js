@@ -7,12 +7,11 @@ async function get(event, context) {
         const id = context.jwtData.data.userID;
 
         const data = await getUser(id);
-        const { avatarS3Key, firstName, lastName, updatedAt, createdAt, email, teams } = data;
+        const { avatarS3Key, name, updatedAt, createdAt, email, teams } = data;
 
         return okResponse({
             id,
-            firstName,
-            lastName,
+            name,
             updatedAt,
             createdAt,
             email,

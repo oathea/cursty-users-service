@@ -7,13 +7,13 @@ async function update(event, context) {
         const id = context.jwtData.data.userID;
 
         const data = await updateUser(id, event.body);
-        const { firstName, lastName, updatedAt, avatarS3Key } = data;
+        const { name, updatedAt, avatarS3Key } = data;
 
         return okResponse({
-            firstName,
-            lastName,
+            name,
             updatedAt,
             avatarS3Key,
+            id,
         });
     } catch (err) {
         console.log('error :%j', err);

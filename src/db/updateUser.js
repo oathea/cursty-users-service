@@ -1,6 +1,6 @@
 const { dynamodb } = require('./index');
 
-module.exports = async function (id, { firstName, lastName, avatarS3Key }) {
+module.exports = async function (id, { name, avatarS3Key }) {
     const now = new Date().getTime();
 
     var params = {
@@ -8,16 +8,18 @@ module.exports = async function (id, { firstName, lastName, avatarS3Key }) {
         Key: {
             id,
         },
-        UpdateExpression:
-            'set firstName = :firstName, lastName = :lastName, updatedAt = :updatedAt, avatarS3Key = :avatarS3Key',
+        UpdateExpression: 'set #updatedAt = :updatedAt, #name = :name, avatarS3Key = :avatarS3Key',
+        ExpressionAttributeNames: {
+            '#updatedAt': 'updatedAt',
+            '#name': 'name',
+        },
         ExpressionAttributeValues: {
-            ':firstName': firstName,
-            ':lastName': lastName,
             ':updatedAt': now,
+            ':name': name,
             ':avatarS3Key': avatarS3Key,
         },
     };
 
     await dynamodb.update(params).promise();
-    return { id, firstName, lastName, avatarS3Key, updatedAt: now };
+    return { id, name, avatarS3Key, updatedAt: now };
 };
