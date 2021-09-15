@@ -3,7 +3,7 @@
     "type": "object",
     "title": "Sign up request schema",
     "required": [
-        "lastName",
+        "name",
         "password"
     ],
     "properties": {
