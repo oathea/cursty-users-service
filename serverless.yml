@@ -18,7 +18,6 @@ custom:
   clientUrl: ${ssm:/curtsy/${self:custom.stage}/client-url}
   senderEmail: ${ssm:/curtsy/${self:custom.stage}/sender-email}
   allowOrigin: ${ssm:/curtsy/${self:custom.stage}/allow-origin, '*'}
-  accountId: ${ssm:/curtsy/account-id}
 
   customDomain:
     domainName: ${ssm:/curtsy/${self:custom.stage}/api-domain}
