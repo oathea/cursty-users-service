@@ -188,15 +188,18 @@ functions:
               schemas:
                 application/json: ${file(src/schemas/reset_email_request.json)}
 
-  selectTeam:
-      handler: src/handlers/selectTeam.handler
-      description: Selects a user's team
+  refreshToken:
+      handler: src/handlers/refreshToken.handler
+      description: Refreshes a user's jwt token
       events:
         - http:
-            path: /select-team/{teamID}
+            path: /refresh-token
             authorizer: ${ssm:/curtsy/${self:custom.stage}/user-authorizer-arn}
             method: patch
             cors: true
+            request:
+              querystrings:
+                teamID: false
 
   handleUpdatedTeams:
       handler: src/handlers/handleUpdatedTeams.handler

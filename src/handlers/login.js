@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const getUserByEmail = require('../db/getUserByEmail');
 const { badRequestResponse, okResponse, serverErrorResponse } = require('../utils/api');
-const { makeJwt, permissions } = require('../utils/jwt');
+const { makeUserJwt } = require('../utils/jwt');
 const { useMiddleware } = require('../utils/middleware');
 
 async function login(event) {
@@ -16,12 +16,7 @@ async function login(event) {
             return badRequestResponse('Invalid credentials.');
         }
 
-        const jwtData = {
-            userID: user.id,
-            permission: permissions.USER,
-        };
-
-        const token = makeJwt(jwtData);
+        const token = makeUserJwt(user);
         return okResponse({ token });
     } catch (err) {
         console.log({ err });
